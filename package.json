@@ -11,6 +11,7 @@
     "test": "jest --passWithNoTests",
     "test:e2e": "playwright test",
     "test:unit": "jest --passWithNoTests",
+    "test:smoke": "playwright test tests/e2e/smoke.spec.ts",
     "test:watch": "jest --watch",
     "build": "next build",
     "start": "next start",
