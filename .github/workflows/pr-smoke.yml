@@ -1,0 +1,37 @@
+name: PR Smoke Tests
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  pr-smoke:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check STAGING_URL secret
+        run: |
+          if [ -z "${{ secrets.STAGING_URL }}" ]; then
+            echo "ERROR: STAGING_URL secret is not set. Please set it in repository secrets to run smoke tests.";
+            exit 1;
+          fi
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      - name: Run smoke tests
+        env:
+          STAGING_URL: ${{ secrets.STAGING_URL }}
+        run: npm run test:smoke

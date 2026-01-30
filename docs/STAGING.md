@@ -36,6 +36,19 @@ STAGING_URL=https://staging.example.com npm run test:smoke
     npx playwright install --with-deps
     npm run test:smoke
 ```
+7. Verify core flows manually if needed (signup, login, add bill, date handling).
+
+"Done" when smoke tests pass and core flows are verified.
+
+## Protecting `main` with smoke tests
+
+1. Go to the repository Settings → Branches → Branch protection rules.
+2. Add or edit a rule for `main`.
+3. Under "Require status checks to pass before merging", add the workflow check name shown in PR checks (e.g., `pr-smoke` or `Run smoke tests`) after you've run a PR once so GitHub knows the exact check name.
+4. Enable the rule to block merges when the smoke tests fail.
+
+Note: The `pr-smoke` workflow will fail if `STAGING_URL` secret is not configured; set `STAGING_URL` under Settings → Secrets → Actions.
+```
 
 7. Verify core flows manually if needed (signup, login, add bill, date handling).
 
