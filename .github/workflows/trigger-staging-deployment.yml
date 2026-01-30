@@ -1,0 +1,39 @@
+name: Trigger Staging Deployment
+
+on:
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: read
+  deployments: write
+
+jobs:
+  create-deployment:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Create GitHub deployment for staging
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const ref = context.sha;
+            const deployment = await github.rest.repos.createDeployment({
+              owner,
+              repo,
+              ref,
+              required_contexts: [],
+              environment: 'staging',
+              description: 'Automatic staging deployment trigger for smoke tests',
+              transient_environment: false,
+              auto_merge: false,
+            });
+            await github.rest.repos.createDeploymentStatus({
+              owner,
+              repo,
+              deployment_id: deployment.data.id,
+              state: 'success',
+            });
+            core.info(`Created deployment ${deployment.data.id}`);
