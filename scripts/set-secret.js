@@ -10,7 +10,7 @@
   Token needs `repo` and `actions:write`/`secrets` permissions.
 */
 
-const sodium = require('tweetsodium');
+const sodium = require('libsodium-wrappers');
 
 function parseArg(name) {
   const pref = `--${name}=`;
@@ -46,12 +46,13 @@ async function run() {
   }
   const { key, key_id } = await publicKeyRes.json();
 
-  // Convert public key and secret value to Uint8Array's (Buffer works)
+  // Initialise libsodium and perform sealed-box encryption
+  await sodium.ready;
+  const sodiumLib = sodium;
   const messageBytes = Buffer.from(value);
   const keyBytes = Buffer.from(key, 'base64');
 
-  // Encrypt using tweetsodium sealed box
-  const encryptedBytes = sodium.seal(messageBytes, keyBytes);
+  const encryptedBytes = sodiumLib.crypto_box_seal(messageBytes, keyBytes);
   const encryptedValue = Buffer.from(encryptedBytes).toString('base64');
 
   const putRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/actions/secrets/${encodeURIComponent(name)}`, {
