@@ -122,11 +122,11 @@ export function BillForm({ onAddBill, isAuthenticated }: BillFormProps) {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="none">No reminders</SelectItem>
-                <SelectItem value="1_day">1 day before</SelectItem>
-                <SelectItem value="3_days">3 days before</SelectItem>
-                <SelectItem value="1_week">1 week before</SelectItem>
-                <SelectItem value="2_weeks">2 weeks before</SelectItem>
+                <SelectItem value={NotificationFrequency.NONE}>No reminders</SelectItem>
+                <SelectItem value={NotificationFrequency.ONE_DAY}>1 day before</SelectItem>
+                <SelectItem value={NotificationFrequency.THREE_DAYS}>3 days before</SelectItem>
+                <SelectItem value={NotificationFrequency.ONE_WEEK}>1 week before</SelectItem>
+                <SelectItem value={NotificationFrequency.TWO_WEEKS}>2 weeks before</SelectItem>
               </SelectContent>
             </Select>
           </div>
