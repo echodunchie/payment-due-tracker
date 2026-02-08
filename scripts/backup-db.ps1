@@ -55,7 +55,7 @@ if (-not $BackupFile) {
 # Validate pg_dump availability
 try {
     $null = Get-Command pg_dump -ErrorAction Stop
-    Write-Host "✓ pg_dump found" -ForegroundColor Green
+    Write-Host "[OK] pg_dump found" -ForegroundColor Green
 } catch {
     Write-Error "pg_dump not found. Install PostgreSQL client tools first."
     Write-Host "Windows: Download from https://www.postgresql.org/download/windows/" -ForegroundColor Yellow
@@ -78,7 +78,7 @@ switch ($Action) {
         if ($LASTEXITCODE -eq 0) {
             $size = (Get-Item $BackupFile).Length
             $sizeMB = [math]::Round($size / 1MB, 2)
-            Write-Host "✓ Backup completed successfully: $BackupFile ($sizeMB MB)" -ForegroundColor Green
+            Write-Host "[OK] Backup completed successfully: $BackupFile ($sizeMB MB)" -ForegroundColor Green
         } else {
             Write-Error "Backup failed with exit code $LASTEXITCODE"
             exit 1
@@ -101,7 +101,7 @@ switch ($Action) {
         if ($LASTEXITCODE -eq 0) {
             $size = (Get-Item $partialFile).Length
             $sizeKB = [math]::Round($size / 1KB, 2)
-            Write-Host "✓ Partial backup completed: $partialFile ($sizeKB KB)" -ForegroundColor Green
+            Write-Host "[OK] Partial backup completed: $partialFile ($sizeKB KB)" -ForegroundColor Green
         } else {
             Write-Error "Partial backup failed with exit code $LASTEXITCODE"
             exit 1
@@ -137,7 +137,7 @@ switch ($Action) {
         }
         
         if ($LASTEXITCODE -eq 0) {
-            Write-Host "✓ Restore completed successfully" -ForegroundColor Green
+            Write-Host "[OK] Restore completed successfully" -ForegroundColor Green
         } else {
             Write-Error "Restore failed with exit code $LASTEXITCODE"
             exit 1

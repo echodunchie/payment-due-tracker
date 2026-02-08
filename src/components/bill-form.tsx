@@ -10,7 +10,8 @@ import { Switch } from '@/components/ui/switch'
 import { Calendar } from '@/components/ui/calendar'
 import { format } from 'date-fns'
 import { Calendar as CalendarIcon, Trash2, Info } from 'lucide-react'
-import type { Bill, NotificationFrequency } from '@/types'
+import type { Bill } from '@/types'
+import { NotificationFrequency } from '@/types'
 import { cn } from '@/lib/utils'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
@@ -24,7 +25,7 @@ export function BillForm({ onAddBill, isAuthenticated }: BillFormProps) {
   const [name, setName] = useState('')
   const [amount, setAmount] = useState('')
   const [dueDate, setDueDate] = useState<Date>()
-  const [notificationFrequency, setNotificationFrequency] = useState<NotificationFrequency>('1_day')
+  const [notificationFrequency, setNotificationFrequency] = useState<NotificationFrequency>(NotificationFrequency.ONE_DAY)
   const [reminderEnabled, setReminderEnabled] = useState(false)
 
   const handleSubmit = (e: React.FormEvent) => {
