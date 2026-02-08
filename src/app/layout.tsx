@@ -18,6 +18,11 @@ export const metadata: Metadata = {
   title: "Payment Due Tracker",
   description: "Track upcoming bill due dates, visualize cash flow risk, and avoid missed payments",
   keywords: "bills, payments, due dates, cash flow, financial planning",
+  icons: {
+    icon: '/pdt-icon.svg',
+    shortcut: '/pdt-icon.svg',
+    apple: '/pdt-icon.svg',
+  },
 };
 
 export default function RootLayout({
