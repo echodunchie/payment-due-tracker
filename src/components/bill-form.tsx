@@ -131,22 +131,24 @@ export function BillForm({ onAddBill, isAuthenticated }: BillFormProps) {
             </Select>
           </div>
 
-          <div className="flex items-center justify-between space-x-2">
-            <div className="space-y-1">
-              <Label htmlFor="reminderToggle">Enable Reminders</Label>
+          <div className="flex items-center justify-between space-x-2 min-w-0">
+            <div className="space-y-1 min-w-0">
+              <Label htmlFor="reminderToggle" className="truncate">Enable Reminders</Label>
               {!isAuthenticated && (
-                <p className="text-xs text-muted-foreground flex items-center">
+                <p className="text-xs text-muted-foreground flex items-center truncate">
                   <Info className="w-3 h-3 mr-1" />
-                  Login to enable reminders
+                  <span className="truncate">Login to enable reminders</span>
                 </p>
               )}
             </div>
-            <Switch
-              id="reminderToggle"
-              checked={reminderEnabled}
-              onCheckedChange={setReminderEnabled}
-              disabled={!isAuthenticated}
-            />
+            <div className="shrink-0">
+              <Switch
+                id="reminderToggle"
+                checked={reminderEnabled}
+                onCheckedChange={setReminderEnabled}
+                disabled={!isAuthenticated}
+              />
+            </div>
           </div>
 
           <Button type="submit" className="w-full">

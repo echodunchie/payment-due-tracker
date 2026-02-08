@@ -10,6 +10,9 @@ import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { ThemeToggle } from '@/components/theme-toggle'
+// compact view is now the default; removed toggle
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { Menu } from 'lucide-react'
 import { AdPlaceholder } from '@/components/ui/ad-placeholder'
 import { BillForm } from '@/components/bill-form'
 import { BillList } from '@/components/bill-list'
@@ -76,6 +79,7 @@ const fadeInUp = {
 
 export default function CalculatorPage() {
   const [availableMoney, setAvailableMoney] = useState('')
+  // compact view removed as a toggle; compact styles applied by default
   const [showCalculation, setShowCalculation] = useState(false)
   const [selectedCurrency, setSelectedCurrency] = useState<Currency>(currencies[0]) // PHP as default
   
@@ -90,6 +94,8 @@ export default function CalculatorPage() {
       setAvailableMoney(user.availableMoney.toString())
     }
   }, [user])
+
+  // no compactView persistence needed
 
   // Save available money when it changes
   const handleAvailableMoneyChange = async (value: string) => {
@@ -198,22 +204,7 @@ export default function CalculatorPage() {
     }
   }
 
-  const handleTestEmail = async () => {
-    if (!user?.email) {
-      toast.error('No email found for current user')
-      return
-    }
 
-    try {
-      console.log('🧪 Testing email functionality for:', user.email)
-      await emailService.sendTestEmail(user.email)
-      toast.success('Test email sent! Check your browser console for the mock email content.')
-      console.log('✅ Test email completed successfully!')
-    } catch (error) {
-      console.error('❌ Test email failed:', error)
-      toast.error('Failed to send test email')
-    }
-  }
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
@@ -230,26 +221,27 @@ export default function CalculatorPage() {
   const remainingAmount = availableAmount - totalBills
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background to-muted/50">
+    <div className="min-h-screen bg-gradient-to-br from-background to-muted/50 compact">
       {/* Navigation */}
       <nav className="border-b bg-background/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
-            <Link href="/" className="flex items-center space-x-2">
+          <div className="flex flex-wrap justify-between items-center py-4">
+            <Link href="/" className="flex items-center space-x-2 mr-6 sm:mr-0">
               <Calendar className="h-8 w-8 text-primary" />
               <span className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
                 PayTracker
               </span>
             </Link>
 
-            <div className="flex items-center space-x-4">
+            {/* Desktop controls */}
+            <div className="hidden sm:flex items-center space-x-4 min-w-0 pl-2 sm:pl-0">
               <ThemeToggle />
               
               {isAuthenticated ? (
                 <div className="flex items-center space-x-4">
-                  <div className="flex items-center space-x-2 text-sm">
+                  <div className="flex items-center space-x-2 text-sm min-w-0">
                     <User className="h-4 w-4" />
-                    <span>{user?.email}</span>
+                    <span className="truncate max-w-[10rem]">{user?.email}</span>
                     {user?.isPremium && (
                       <Badge variant="secondary" className="text-xs">Premium</Badge>
                     )}
@@ -259,10 +251,6 @@ export default function CalculatorPage() {
                     <LogOut className="h-4 w-4 mr-2" />
                     Sign Out
                   </Button>
-                  
-                  <Button variant="outline" size="sm" onClick={handleTestEmail}>
-                    📧 Test Email
-                  </Button>
                 </div>
               ) : (
                 <div className="flex items-center space-x-2">
@@ -271,6 +259,36 @@ export default function CalculatorPage() {
                   </Link>
                 </div>
               )}
+            </div>
+
+            {/* Mobile hamburger */}
+            <div className="flex sm:hidden items-center">
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="ghost" aria-label="Open menu">
+                    <Menu className="h-5 w-5" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent>
+                  <div className="flex flex-col space-y-2">
+                    <ThemeToggle />
+                    {/* compact view is default; toggle removed */}
+                    {isAuthenticated ? (
+                      <>
+                        <div className="flex items-center space-x-2 text-sm">
+                          <User className="h-4 w-4" />
+                          <span className="truncate max-w-[12rem]">{user?.email}</span>
+                        </div>
+                        <Button variant="ghost" onClick={handleLogout} className="justify-start">Sign Out</Button>
+                      </>
+                    ) : (
+                      <Link href="/auth">
+                        <Button variant="ghost" className="justify-start">Sign In</Button>
+                      </Link>
+                    )}
+                  </div>
+                </PopoverContent>
+              </Popover>
             </div>
           </div>
         </div>
@@ -664,38 +682,6 @@ export default function CalculatorPage() {
                   )}
                 </CardContent>
               </Card>
-
-              {!isAuthenticated && (
-                <Card className="border-2 border-primary/20 bg-primary/5">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <User className="h-5 w-5" />
-                      Upgrade Experience
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <ul className="space-y-2 text-sm">
-                      <li className="flex items-center gap-2">
-                        <div className="w-2 h-2 bg-primary rounded-full"></div>
-                        <span>Save your bills permanently</span>
-                      </li>
-                      <li className="flex items-center gap-2">
-                        <div className="w-2 h-2 bg-primary rounded-full"></div>
-                        <span>Enable email reminders</span>
-                      </li>
-                      <li className="flex items-center gap-2">
-                        <div className="w-2 h-2 bg-primary rounded-full"></div>
-                        <span>Remove ads</span>
-                      </li>
-                    </ul>
-                    <Link href="/auth">
-                      <Button className="w-full">
-                        Sign Up Free
-                      </Button>
-                    </Link>
-                  </CardContent>
-                </Card>
-              )}
             </div>
           </div>
         </motion.div>

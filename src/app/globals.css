@@ -173,4 +173,22 @@
   .custom-scroll::-webkit-scrollbar-thumb:hover {
     background-color: hsl(var(--muted-foreground) / 0.5);
   }
+
+  /* Compact view adjustments for calculator */
+  .compact {
+    font-size: 0.9rem;
+  }
+  .compact .text-5xl { font-size: 2rem; }
+  .compact .text-4xl { font-size: 1.6rem; }
+  .compact .text-2xl { font-size: 1rem; }
+  .compact .text-xl { font-size: 0.95rem; }
+  .compact .h-8 { height: 1.6rem; }
+  .compact .w-8 { width: 1.6rem; }
+  .compact .h-12 { height: 2rem; }
+  .compact input, .compact .SelectTrigger, .compact .btn, .compact button { padding: 0.4rem 0.6rem; }
+  .compact .card, .compact .CardContent, .compact .card-content { padding: 0.5rem; }
+  .compact .py-8 { padding-top: 1rem; padding-bottom: 1rem; }
+  .compact .py-6 { padding-top: 0.6rem; padding-bottom: 0.6rem; }
+  .compact .px-4 { padding-left: 0.5rem; padding-right: 0.5rem; }
+  .compact .space-y-6 > * + * { margin-top: 0.5rem; }
 }

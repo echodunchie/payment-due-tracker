@@ -5,6 +5,8 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { ThemeToggle } from '@/components/theme-toggle'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { Menu } from 'lucide-react'
 import { AdPlaceholder } from '@/components/ui/ad-placeholder'
 import { 
   Calendar, 
@@ -39,12 +41,12 @@ export default function LandingPage() {
       {/* Navigation */}
       <nav className="border-b bg-background/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
+          <div className="flex flex-wrap justify-between items-center py-4">
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5 }}
-              className="flex items-center space-x-2"
+              className="flex items-center space-x-2 mr-6 sm:mr-0"
             >
               <Calendar className="h-8 w-8 text-primary" />
               <span className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
@@ -52,14 +54,38 @@ export default function LandingPage() {
               </span>
             </motion.div>
 
-            <div className="flex items-center space-x-4">
+            {/* Desktop controls */}
+            <div className="hidden sm:flex items-center space-x-4 min-w-0 pl-2 sm:pl-0">
               <ThemeToggle />
+              {/* Compact view toggle is only available on calculator page */}
               <Link href="/auth">
                 <Button variant="outline">Sign In</Button>
               </Link>
               <Link href="/calculator">
                 <Button>Try Free</Button>
               </Link>
+            </div>
+
+            {/* Mobile hamburger */}
+            <div className="flex sm:hidden items-center">
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="ghost" aria-label="Open menu">
+                    <Menu className="h-5 w-5" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent>
+                  <div className="flex flex-col space-y-2">
+                    <ThemeToggle />
+                    <Link href="/auth">
+                      <Button variant="ghost" className="justify-start">Sign In</Button>
+                    </Link>
+                    <Link href="/calculator">
+                      <Button variant="ghost" className="justify-start">Try Free</Button>
+                    </Link>
+                  </div>
+                </PopoverContent>
+              </Popover>
             </div>
           </div>
         </div>
@@ -249,116 +275,6 @@ export default function LandingPage() {
           </motion.div>
         </div>
       </section>
-
-      {/* Pricing Section */}
-      <section className="py-20 px-4">
-        <div className="max-w-4xl mx-auto">
-          <motion.div
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="text-center space-y-16"
-          >
-            <motion.div variants={fadeInUp} className="space-y-4">
-              <h2 className="text-4xl md:text-5xl font-bold">
-                Simple, Honest Pricing
-              </h2>
-              <p className="text-xl text-muted-foreground">
-                Choose the plan that works for you
-              </p>
-            </motion.div>
-
-            <motion.div
-              variants={staggerContainer}
-              className="grid md:grid-cols-2 gap-8"
-            >
-              <motion.div variants={fadeInUp}>
-                <Card className="relative overflow-hidden border-2">
-                  <CardHeader>
-                    <CardTitle className="text-2xl">Free</CardTitle>
-                    <CardDescription className="text-lg">Perfect for getting started</CardDescription>
-                    <div className="text-4xl font-bold">₱0<span className="text-lg text-muted-foreground">/month</span></div>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <ul className="space-y-3">
-                      <li className="flex items-center">
-                        <CheckCircle className="w-5 h-5 text-green-500 mr-2" />
-                        <span>Full bill tracking</span>
-                      </li>
-                      <li className="flex items-center">
-                        <CheckCircle className="w-5 h-5 text-green-500 mr-2" />
-                        <span>Calendar visualization</span>
-                      </li>
-                      <li className="flex items-center">
-                        <CheckCircle className="w-5 h-5 text-green-500 mr-2" />
-                        <span>Cash flow analysis</span>
-                      </li>
-                      <li className="flex items-center opacity-60">
-                        <div className="w-5 h-5 border border-muted-foreground rounded mr-2" />
-                        <span>No data persistence</span>
-                      </li>
-                      <li className="flex items-center opacity-60">
-                        <div className="w-5 h-5 border border-muted-foreground rounded mr-2" />
-                        <span>Contains ads</span>
-                      </li>
-                    </ul>
-                    <Link href="/calculator">
-                      <Button variant="outline" className="w-full">
-                        Try Now
-                      </Button>
-                    </Link>
-                  </CardContent>
-                  <AdPlaceholder type="rectangle" className="m-4" />
-                </Card>
-              </motion.div>
-
-              <motion.div variants={fadeInUp}>
-                <Card className="relative overflow-hidden border-2 border-primary shadow-lg">
-                  <div className="absolute top-0 left-0 right-0 bg-primary text-primary-foreground text-center py-2 text-sm font-medium">
-                    Most Popular
-                  </div>
-                  <CardHeader className="pt-10">
-                    <CardTitle className="text-2xl">Premium</CardTitle>
-                    <CardDescription className="text-lg">For serious bill tracking</CardDescription>
-                    <div className="text-4xl font-bold">₱99<span className="text-lg text-muted-foreground">/month</span></div>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <ul className="space-y-3">
-                      <li className="flex items-center">
-                        <CheckCircle className="w-5 h-5 text-green-500 mr-2" />
-                        <span>Everything in Free</span>
-                      </li>
-                      <li className="flex items-center">
-                        <CheckCircle className="w-5 h-5 text-green-500 mr-2" />
-                        <span>Data persistence</span>
-                      </li>
-                      <li className="flex items-center">
-                        <CheckCircle className="w-5 h-5 text-green-500 mr-2" />
-                        <span>Email reminders</span>
-                      </li>
-                      <li className="flex items-center">
-                        <CheckCircle className="w-5 h-5 text-green-500 mr-2" />
-                        <span>No ads</span>
-                      </li>
-                      <li className="flex items-center">
-                        <CheckCircle className="w-5 h-5 text-green-500 mr-2" />
-                        <span>Priority support</span>
-                      </li>
-                    </ul>
-                    <Link href="/auth">
-                      <Button className="w-full">
-                        Get Started
-                      </Button>
-                    </Link>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            </motion.div>
-          </motion.div>
-        </div>
-      </section>
-
       {/* Footer */}
       <footer className="border-t bg-muted/50 py-12 px-4">
         <div className="max-w-7xl mx-auto">

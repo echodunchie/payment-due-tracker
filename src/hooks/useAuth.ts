@@ -12,7 +12,28 @@ export function useAuth() {
     try {
       setLoading(true)
       console.log('🔐 [AUTH CHECK] Starting auth check...')
-      const currentUser = await authService.getCurrentUser()
+      // First try the in-memory auth service (used in demo/local mode)
+      let currentUser = await authService.getCurrentUser()
+
+      // If in-memory service has no user, fall back to Supabase session user
+      if (!currentUser) {
+        try {
+          const { data } = await supabase.auth.getUser()
+          const su = data.user
+          if (su) {
+            currentUser = {
+              id: su.id,
+              email: su.email ?? '',
+              isAuthenticated: true,
+              isPremium: false,
+              createdAt: new Date()
+            }
+          }
+        } catch (err) {
+          // ignore and keep currentUser as null
+        }
+      }
+
       setUser(currentUser)
       console.log('🔐 [AUTH CHECK] Auth check completed, user:', currentUser?.email || 'none')
     } catch (err) {
@@ -94,7 +115,25 @@ export function useAuth() {
       if (event === 'SIGNED_OUT' || !session) {
         setUser(null)
         setLoading(false)
-      } else if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+        return
+      }
+
+      if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+        // Prefer Supabase session user when available
+        const su = session?.user
+        if (su) {
+          setUser({
+            id: su.id,
+            email: su.email ?? '',
+            isAuthenticated: true,
+            isPremium: false,
+            createdAt: new Date()
+          })
+          setLoading(false)
+          return
+        }
+
+        // Fallback to in-memory auth service
         try {
           const currentUser = await authService.getCurrentUser()
           setUser(currentUser)
@@ -103,10 +142,11 @@ export function useAuth() {
         } finally {
           setLoading(false)
         }
-      } else {
-        // Handle other auth events by ensuring loading is false
-        setLoading(false)
+        return
       }
+
+      // Handle other auth events by ensuring loading is false
+      setLoading(false)
     })
 
     return () => {

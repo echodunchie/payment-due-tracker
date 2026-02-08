@@ -99,8 +99,8 @@ export function BillList({ bills, onDeleteBill, onUpdateBill, isAuthenticated }:
               daysUntil <= 3 && daysUntil > 0 && "border-yellow-500/50 bg-yellow-500/5"
             )}>
               <CardContent className="pt-6">
-                <div className="flex items-start justify-between">
-                  <div className="space-y-2 flex-1">
+                <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
+                  <div className="space-y-2 flex-1 min-w-0">
                     <div className="flex items-center gap-3">
                       <h3 className="font-semibold text-lg">{bill.name}</h3>
                       <Badge variant={badgeVariant}>
@@ -111,6 +111,11 @@ export function BillList({ bills, onDeleteBill, onUpdateBill, isAuthenticated }:
                             : `Due in ${daysUntil} days`
                         }
                       </Badge>
+                    </div>
+
+                    {/* Mobile: show amount full-width above controls to avoid truncation */}
+                    <div className="sm:hidden text-2xl font-bold mt-2">
+                      {formatCurrency(bill.amount)}
                     </div>
                     
                     <div className="flex items-center gap-4 text-sm text-muted-foreground">
@@ -124,13 +129,13 @@ export function BillList({ bills, onDeleteBill, onUpdateBill, isAuthenticated }:
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-4">
-                    <div className="text-right">
-                      <div className="text-2xl font-bold">{formatCurrency(bill.amount)}</div>
+                  <div className="flex items-center gap-4 min-w-0 sm:items-center sm:justify-end">
+                    <div className="hidden sm:block text-2xl font-bold truncate w-24 sm:w-auto sm:text-right min-w-0">
+                      {formatCurrency(bill.amount)}
                     </div>
-                    
-                    <div className="flex items-center gap-2">
-                      <div className="flex items-center gap-2">
+
+                    <div className="flex items-center gap-2 min-w-0">
+                      <div className="flex items-center gap-2 shrink-0">
                         {bill.reminderEnabled ? (
                           <Bell className="h-4 w-4 text-green-600" />
                         ) : (
@@ -143,7 +148,7 @@ export function BillList({ bills, onDeleteBill, onUpdateBill, isAuthenticated }:
                           className="data-[state=unchecked]:bg-muted"
                         />
                       </div>
-                      
+
                       <Button
                         variant="outline"
                         size="sm"

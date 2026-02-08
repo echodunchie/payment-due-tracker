@@ -28,7 +28,8 @@ export default function AuthPage() {
     confirmPassword: ''
   })
   
-  const { login, register, loading, error, clearError } = useAuth()
+  const { login, register, loading: authLoading, error, clearError } = useAuth()
+  const [submitting, setSubmitting] = useState(false)
   const router = useRouter()
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -52,9 +53,10 @@ export default function AuthPage() {
       return
     }
 
+    setSubmitting(true)
     try {
       console.log('🔐 [AUTH FORM] Starting', isLogin ? 'login' : 'registration', 'for:', formData.email)
-      
+
       if (isLogin) {
         await login(formData)
         toast.success('Welcome back!')
@@ -62,14 +64,16 @@ export default function AuthPage() {
         await register(formData)
         toast.success('Account created successfully!')
       }
-      
+
       console.log('🔐 [AUTH FORM] Auth successful, redirecting to calculator...')
-      
+
       // Redirect to calculator after successful auth
       router.push('/calculator')
     } catch (err) {
       // Error is handled by useAuth hook and displayed via the error state
       console.error('Auth error:', err)
+    } finally {
+      setSubmitting(false)
     }
   }
 
@@ -128,7 +132,7 @@ export default function AuthPage() {
                     value={formData.email}
                     onChange={handleInputChange}
                     required
-                    disabled={loading}
+                    disabled={submitting}
                     autoComplete="email"
                   />
                 </div>
@@ -144,7 +148,7 @@ export default function AuthPage() {
                       value={formData.password}
                       onChange={handleInputChange}
                       required
-                      disabled={loading}
+                      disabled={submitting}
                       autoComplete={isLogin ? 'current-password' : 'new-password'}
                       className="pr-10"
                     />
@@ -152,7 +156,7 @@ export default function AuthPage() {
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
                       className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 hover:text-gray-700"
-                      disabled={loading}
+                        disabled={submitting}
                     >
                       {showPassword ? (
                         <EyeOff className="h-4 w-4" />
@@ -175,15 +179,15 @@ export default function AuthPage() {
                         value={formData.confirmPassword}
                         onChange={handleInputChange}
                         required
-                        disabled={loading}
+                        disabled={submitting}
                         autoComplete="new-password"
                         className="pr-10"
                       />
                       <button
                         type="button"
                         onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                        className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 hover:text-gray-700"
-                        disabled={loading}
+                      className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 hover:text-gray-700"
+                        disabled={submitting}
                       >
                         {showConfirmPassword ? (
                           <EyeOff className="h-4 w-4" />
@@ -204,10 +208,10 @@ export default function AuthPage() {
                 <Button 
                   type="submit" 
                   className="w-full" 
-                  disabled={loading}
+                  disabled={submitting}
                   size="lg"
                 >
-                  {loading ? (
+                  {submitting ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                       {isLogin ? 'Signing in...' : 'Creating account...'}
@@ -226,7 +230,7 @@ export default function AuthPage() {
                     type="button"
                     onClick={toggleMode}
                     className="text-primary hover:underline font-medium"
-                    disabled={loading}
+                    disabled={submitting}
                   >
                     {isLogin ? 'Sign up' : 'Sign in'}
                   </button>

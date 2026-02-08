@@ -11,32 +11,9 @@ class InMemoryAuthService implements AuthService {
     // Load persisted users from localStorage first
     this.loadPersistedUsers()
     
-    // Add default test users for development (only if they don't already exist)
-    if (!this.users.has('test@example.com')) {
-      this.users.set('test@example.com', {
-        id: 'test-user-1',
-        email: 'test@example.com',
-        password: 'password123',
-        isAuthenticated: true,
-        isPremium: false,
-        createdAt: new Date('2026-01-01')
-      })
-    }
-    
-    if (!this.users.has('premium@example.com')) {
-      this.users.set('premium@example.com', {
-        id: 'premium-user-1', 
-        email: 'premium@example.com',
-        password: 'premium123',
-        isAuthenticated: true,
-        isPremium: true,
-        createdAt: new Date('2025-12-01')
-      })
-    }
-    
-    // Save updated users list (including any new default users)
+    // Save any persisted users loaded above
     this.persistUsers()
-    
+
     console.log('🔐 [AUTH] Initialized with users:', Array.from(this.users.keys()))
   }
 

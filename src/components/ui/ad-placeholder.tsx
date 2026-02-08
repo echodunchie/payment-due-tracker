@@ -12,7 +12,7 @@ export function AdPlaceholder({ type = 'banner', className }: AdPlaceholderProps
   const adStyles = {
     banner: 'h-24 w-full',
     rectangle: 'h-64 w-full max-w-sm',
-    sidebar: 'h-96 w-48'
+    sidebar: 'h-96 w-48 max-w-full'
   }
 
   return (
